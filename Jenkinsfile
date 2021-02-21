@@ -1,7 +1,9 @@
 pipeline {
     agent any
 
-     stages {
+   
+
+    stages {
         stage('Build') {
             steps {
                 git 'https://github.com/vdespa-collab/java-rest-api-calculator.git'
@@ -20,6 +22,17 @@ pipeline {
                     junit '**/target/surefire-reports/TEST-*.xml'
                 }
             }
-         }
+        }
+        stage('Publish') {
+            steps {
+                sh './mvnw package'
+                // bat '.\\mvnw package'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
     }
 }
